@@ -1,0 +1,41 @@
+class Solution(object):
+    def divide(self, dividend, divisor):
+        """
+        :type dividend: int
+        :type divisor: int
+        :rtype: int
+        """
+        if dividend == -2**31 and divisor == -1:
+            return 2**31 - 1  # overflow durumu
+
+        def control(dividend):
+            if dividend > 2**31:
+                return 2**31-1
+            elif dividend < -2**31:
+                return -2**31
+            else:
+                return dividend
+
+        dividend = control(dividend)
+
+        # İşaret kontrolü
+        sign = 1
+        if (dividend < 0) != (divisor < 0):
+            sign = -1
+
+        dividend = abs(dividend)
+        divisor = abs(divisor)
+
+        counter = 0
+
+        if dividend == divisor:
+            return sign * 1
+
+        while dividend >= divisor:
+            shift = 0
+            while dividend >= (divisor << (shift + 1)):
+                shift += 1
+            dividend -= divisor << shift
+            counter += 1 << shift
+
+        return sign * counter
